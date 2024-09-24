@@ -1,11 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:movie_mania/presentation/screens/details_screen.dart';
 import 'package:movie_mania/presentation/screens/search_screen.dart';
+import 'package:movie_mania/presentation/state_holders/home_screen_controller.dart';
 import 'package:movie_mania/presentation/utility/app_colors.dart';
+import 'package:movie_mania/presentation/widgets/center_circular_progress_indicator.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) async =>
+          await Get.find<HomeScreenController>().fetchMovieList(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +36,29 @@ class HomeScreen extends StatelessWidget {
               _buildSearchMovieButton(),
               const SizedBox(height: 16),
               Expanded(
-                child: ListView.separated(
-                  itemCount: 10,
-                  itemBuilder: (context, index) => _buildMovieItem(),
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 12,
-                  ),
-                ),
+                child: GetBuilder<HomeScreenController>(
+                    builder: (homeScreenController) {
+                  return homeScreenController.inProgress
+                      ? const CenterCircularProgressIndicator()
+                      : ListView.separated(
+                          itemCount:
+                              homeScreenController.getAllMovies.length ?? 0,
+                          itemBuilder: (context, index) => _buildMovieItem(
+                            imageUrl: homeScreenController
+                                    .getAllMovies[index].show?.image?.medium ??
+                                "",
+                            title: homeScreenController
+                                    .getAllMovies[index].show?.name ??
+                                "",
+                            description: homeScreenController
+                                    .getAllMovies[index].show?.summary ??
+                                "",
+                          ),
+                          separatorBuilder: (context, index) => const SizedBox(
+                            height: 12,
+                          ),
+                        );
+                }),
               ),
             ],
           ),
@@ -34,37 +67,46 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMovieItem() {
+  Widget _buildMovieItem({
+    required String imageUrl,
+    required String title,
+    required String description,
+  }) {
     return GestureDetector(
       onTap: () {
         Get.to(() => DetailsScreen());
       },
-      child: Container(
-        child: Column(
-          children: [
-            Image.network(
-              height: Get.height / 3.8,
-              "https://static.tvmaze.com/uploads/images/medium_portrait/425/1064746.jpg",
-              fit: BoxFit.cover,
+      child: Column(
+        children: [
+          Image.network(
+            height: Get.height / 3.8,
+            imageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(
+                Icons.broken_image,
+                color: AppColors.appThemeRed,
+                size: Get.height / 5,
+              ); // Display an error icon
+            },
+          ),
+          const SizedBox(height: 1),
+          Text(
+            title,
+            style: const TextStyle(
+              color: AppColors.appThemeWhite,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 1),
-            Text(
-              "All American",
-              style: TextStyle(
-                color: AppColors.appThemeWhite,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          const SizedBox(height: 2),
+          HtmlWidget(
+            description,
+            textStyle: const TextStyle(
+              color: AppColors.appThemeWhite,
             ),
-            const SizedBox(height: 2),
-            Text(
-              "When a rising high school football player from South Central L.A. is recruited to play for Beverly Hills High, the wins, losses and struggles of two families from vastly different worlds — Compton and Beverly Hills — begin to collide. Inspired by the life of pro football player Spencer Paysinger.",
-              style: TextStyle(
-                color: AppColors.appThemeWhite,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
