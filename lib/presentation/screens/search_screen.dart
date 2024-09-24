@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:movie_mania/presentation/screens/details_screen.dart';
-import 'package:movie_mania/presentation/screens/home_screen.dart';
 import 'package:movie_mania/presentation/screens/main_bottom_nav_screen.dart';
 import 'package:movie_mania/presentation/state_holders/main_bottom_nav_controller.dart';
 import 'package:movie_mania/presentation/state_holders/search_screen_controller.dart';
 import 'package:movie_mania/presentation/utility/app_colors.dart';
 import 'package:movie_mania/presentation/widgets/center_circular_progress_indicator.dart';
-import 'package:movie_mania/presentation/widgets/exit_dialog_widget.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
