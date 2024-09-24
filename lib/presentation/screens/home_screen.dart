@@ -37,28 +37,30 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               Expanded(
                 child: GetBuilder<HomeScreenController>(
-                    builder: (homeScreenController) {
-                  return homeScreenController.inProgress
-                      ? const CenterCircularProgressIndicator()
-                      : ListView.separated(
-                          itemCount:
-                              homeScreenController.getAllMovies.length ?? 0,
-                          itemBuilder: (context, index) => _buildMovieItem(
-                            imageUrl: homeScreenController
-                                    .getAllMovies[index].show?.image?.medium ??
-                                "",
-                            title: homeScreenController
-                                    .getAllMovies[index].show?.name ??
-                                "",
-                            description: homeScreenController
-                                    .getAllMovies[index].show?.summary ??
-                                "",
-                          ),
-                          separatorBuilder: (context, index) => const SizedBox(
-                            height: 12,
-                          ),
-                        );
-                }),
+                  builder: (homeScreenController) {
+                    return homeScreenController.inProgress
+                        ? const CenterCircularProgressIndicator()
+                        : ListView.separated(
+                            itemCount:
+                                homeScreenController.getAllMovies.length ?? 0,
+                            itemBuilder: (context, index) => _buildMovieItem(
+                              imageUrl: homeScreenController.getAllMovies[index]
+                                      .show?.image?.medium ??
+                                  "",
+                              title: homeScreenController
+                                      .getAllMovies[index].show?.name ??
+                                  "",
+                              description: homeScreenController
+                                      .getAllMovies[index].show?.summary ??
+                                  "",
+                            ),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                              height: 12,
+                            ),
+                          );
+                  },
+                ),
               ),
             ],
           ),
@@ -74,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => DetailsScreen());
+        Get.to(() => const DetailsScreen());
       },
       child: Column(
         children: [

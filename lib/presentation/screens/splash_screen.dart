@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:movie_mania/presentation/screens/home_screen.dart';
 import 'package:movie_mania/presentation/screens/main_bottom_nav_screen.dart';
 import 'package:movie_mania/presentation/utility/app_colors.dart';
 import 'package:movie_mania/presentation/utility/assets_path.dart';

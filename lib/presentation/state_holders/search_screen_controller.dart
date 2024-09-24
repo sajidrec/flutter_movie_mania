@@ -1,9 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:movie_mania/data/models/movie_details_model.dart';
-import 'package:dio/dio.dart';
 import 'package:movie_mania/data/utility/urls_util.dart';
 
-class HomeScreenController extends GetxController {
+class SearchScreenController extends GetxController {
   bool _inProgress = false;
 
   bool get inProgress => _inProgress;
@@ -12,15 +12,20 @@ class HomeScreenController extends GetxController {
 
   List<MovieDetailsModel> get getAllMovies => _allMovies;
 
-  Future<void> fetchMovieList() async {
+  Future<void> fetchSearchResult({
+    required String keyword,
+  }) async {
     _inProgress = true;
     update();
 
-    _allMovies.clear();
     final dio = Dio();
 
+    _allMovies.clear();
+
     try {
-      dynamic result = await dio.get(UrlsUtil.allMovieListUrl);
+      dynamic result = await dio.get(
+        UrlsUtil.getSearchResult(keyword: keyword),
+      );
 
       for (int i = 0; i < result.data.length; i++) {
         _allMovies.add(MovieDetailsModel.fromJson(result.data[i]));
