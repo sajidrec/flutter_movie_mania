@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:movie_mania/data/models/movie_details_model.dart'
     as movie_details_model;
 import 'package:movie_mania/presentation/utility/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({
@@ -41,14 +42,21 @@ class DetailsScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  movieDetailsModel.show?.url ?? "",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.appThemeBlue,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                GestureDetector(
+                  onTap: () async {
+                    await launchUrl(
+                      Uri.parse(movieDetailsModel.show?.url ?? ""),
+                    );
+                  },
+                  child: Text(
+                    movieDetailsModel.show?.url ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.appThemeBlue,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 Row(
