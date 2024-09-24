@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ? const CenterCircularProgressIndicator()
                         : ListView.separated(
                             itemCount:
-                                homeScreenController.getAllMovies.length ?? 0,
+                                homeScreenController.getAllMovies.length,
                             itemBuilder: (context, index) => _buildMovieItem(
                               imageUrl: homeScreenController.getAllMovies[index]
                                       .show?.image?.medium ??

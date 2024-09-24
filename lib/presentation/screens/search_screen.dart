@@ -59,7 +59,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     )
                   : ListView.separated(
                       itemCount:
-                          searchScreenController.getAllMovies.length ?? 0,
+                          searchScreenController.getAllMovies.length,
                       itemBuilder: (context, index) => _buildMovieItem(
                         imageUrl: searchScreenController
                                 .getAllMovies[index].show?.image?.medium ??
