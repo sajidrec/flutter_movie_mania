@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:movie_mania/presentation/screens/details_screen.dart';
@@ -6,6 +7,7 @@ import 'package:movie_mania/presentation/screens/search_screen.dart';
 import 'package:movie_mania/presentation/state_holders/home_screen_controller.dart';
 import 'package:movie_mania/presentation/utility/app_colors.dart';
 import 'package:movie_mania/presentation/widgets/center_circular_progress_indicator.dart';
+import 'package:movie_mania/presentation/widgets/exit_dialog_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,42 +29,49 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.appThemeBlack,
-        body: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
-          child: Column(
-            children: [
-              _buildSearchMovieButton(),
-              const SizedBox(height: 16),
-              Expanded(
-                child: GetBuilder<HomeScreenController>(
-                  builder: (homeScreenController) {
-                    return homeScreenController.inProgress
-                        ? const CenterCircularProgressIndicator()
-                        : ListView.separated(
-                            itemCount:
-                                homeScreenController.getAllMovies.length,
-                            itemBuilder: (context, index) => _buildMovieItem(
-                              imageUrl: homeScreenController.getAllMovies[index]
-                                      .show?.image?.medium ??
-                                  "",
-                              title: homeScreenController
-                                      .getAllMovies[index].show?.name ??
-                                  "",
-                              description: homeScreenController
-                                      .getAllMovies[index].show?.summary ??
-                                  "",
-                            ),
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              height: 12,
-                            ),
-                          );
-                  },
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) => ExitDialogWidget.showPopUp(),
+        child: Scaffold(
+          backgroundColor: AppColors.appThemeBlack,
+          body: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
+            child: Column(
+              children: [
+                _buildSearchMovieButton(),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: GetBuilder<HomeScreenController>(
+                    builder: (homeScreenController) {
+                      return homeScreenController.inProgress
+                          ? const CenterCircularProgressIndicator()
+                          : ListView.separated(
+                              itemCount:
+                                  homeScreenController.getAllMovies.length,
+                              itemBuilder: (context, index) => _buildMovieItem(
+                                imageUrl: homeScreenController
+                                        .getAllMovies[index]
+                                        .show
+                                        ?.image
+                                        ?.medium ??
+                                    "",
+                                title: homeScreenController
+                                        .getAllMovies[index].show?.name ??
+                                    "",
+                                description: homeScreenController
+                                        .getAllMovies[index].show?.summary ??
+                                    "",
+                              ),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                height: 12,
+                              ),
+                            );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

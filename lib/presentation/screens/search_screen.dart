@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:movie_mania/presentation/screens/details_screen.dart';
+import 'package:movie_mania/presentation/screens/home_screen.dart';
+import 'package:movie_mania/presentation/screens/main_bottom_nav_screen.dart';
+import 'package:movie_mania/presentation/state_holders/main_bottom_nav_controller.dart';
 import 'package:movie_mania/presentation/state_holders/search_screen_controller.dart';
 import 'package:movie_mania/presentation/utility/app_colors.dart';
 import 'package:movie_mania/presentation/widgets/center_circular_progress_indicator.dart';
+import 'package:movie_mania/presentation/widgets/exit_dialog_widget.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -24,16 +28,23 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.appThemeBlack,
-        body: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
-          child: Column(
-            children: [
-              _buildSearchBox(),
-              const SizedBox(height: 12),
-              _buildSearchedMovieList(),
-            ],
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          Get.find<MainBottomNavController>().changeIndex(0);
+          Get.off(() => const MainBottomNavScreen());
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.appThemeBlack,
+          body: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
+            child: Column(
+              children: [
+                _buildSearchBox(),
+                const SizedBox(height: 12),
+                _buildSearchedMovieList(),
+              ],
+            ),
           ),
         ),
       ),
@@ -58,8 +69,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     )
                   : ListView.separated(
-                      itemCount:
-                          searchScreenController.getAllMovies.length,
+                      itemCount: searchScreenController.getAllMovies.length,
                       itemBuilder: (context, index) => _buildMovieItem(
                         imageUrl: searchScreenController
                                 .getAllMovies[index].show?.image?.medium ??
