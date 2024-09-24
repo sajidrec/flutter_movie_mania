@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
+import 'package:movie_mania/data/models/movie_details_model.dart'
+    as movie_details_model;
 import 'package:movie_mania/presentation/screens/details_screen.dart';
 import 'package:movie_mania/presentation/screens/main_bottom_nav_screen.dart';
 import 'package:movie_mania/presentation/state_holders/main_bottom_nav_controller.dart';
@@ -78,6 +80,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         description: searchScreenController
                                 .getAllMovies[index].show?.summary ??
                             "",
+                        movieDetialsModel:
+                            searchScreenController.getAllMovies[index],
                       ),
                       separatorBuilder: (context, index) => const SizedBox(
                         height: 12,
@@ -88,14 +92,18 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildMovieItem({
-    required String imageUrl,
-    required String title,
-    required String description,
-  }) {
+  Widget _buildMovieItem(
+      {required String imageUrl,
+      required String title,
+      required String description,
+      required movie_details_model.MovieDetailsModel movieDetialsModel}) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => const DetailsScreen());
+        Get.to(
+          () => DetailsScreen(
+            movieDetailsModel: movieDetialsModel,
+          ),
+        );
       },
       child: Column(
         children: [

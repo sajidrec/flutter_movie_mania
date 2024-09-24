@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
+import 'package:movie_mania/data/models/movie_details_model.dart'
+    as movie_model;
 import 'package:movie_mania/presentation/screens/details_screen.dart';
 import 'package:movie_mania/presentation/screens/search_screen.dart';
 import 'package:movie_mania/presentation/state_holders/home_screen_controller.dart';
@@ -60,6 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 description: homeScreenController
                                         .getAllMovies[index].show?.summary ??
                                     "",
+                                movieDetailsModel:
+                                    homeScreenController.getAllMovies[index],
                               ),
                               separatorBuilder: (context, index) =>
                                   const SizedBox(
@@ -81,10 +85,15 @@ class _HomeScreenState extends State<HomeScreen> {
     required String imageUrl,
     required String title,
     required String description,
+    required movie_model.MovieDetailsModel movieDetailsModel,
   }) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => const DetailsScreen());
+        Get.to(
+          () => DetailsScreen(
+            movieDetailsModel: movieDetailsModel,
+          ),
+        );
       },
       child: Column(
         children: [
@@ -113,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
           HtmlWidget(
             description,
             textStyle: const TextStyle(
-              color: AppColors.appThemeWhite,
+              color: AppColors.appThemeLightWhite,
             ),
           ),
         ],
